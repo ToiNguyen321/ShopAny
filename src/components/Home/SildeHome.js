@@ -15,9 +15,7 @@ export default class SildeHome extends Component {
         <Swiper
           from={0}
           loop
-          timeout={3.5}
-          minDistanceForAction={0.0}
-          actionMinWidth={0.5}
+          timeout={15}
           controlsProps={{
             dotsTouchable: false,
             prevPos: 'left',

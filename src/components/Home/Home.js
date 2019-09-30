@@ -11,24 +11,23 @@ const SLIDER_MAX_HEIGHT = 200;
 const SLIDER_MIN_HEIGHT = 0;
 const SLIDER_SCROLL_DISTANCE = SLIDER_MAX_HEIGHT - SLIDER_MIN_HEIGHT;
 export default class Home extends Component {
-	static navigationOptions = ({ navigation }) => ({
-		headerTitleStyle: {
-			textAlign: 'center',
-			flexGrow: 1,
-			alignSelf: 'center',
-		},
-		headerTitle: 'Home',
-		headerLeft: (<View></View>),
-		headerRight: (
-			<Button
-				transparent
-				onPress={() => navigation.toggleDrawer()}
-			>
-				<Icon name='menu' size={25} />
-			</Button>
-		),
-	});
-
+	_onScrollEnd = ({contentOffset, contentSize}) => {
+		if (parseInt(contentOffset.y) >= parseInt(contentSize.height - 700)) {
+			if (this.state.loadDataPage === true) {
+				this.setState({
+					loadDataPage: false,
+				})
+				console.log(contentOffset.y, parseInt(contentSize.height - 700))
+				console.log('Loadthem', this.state.data.length)
+				setTimeout(() => this.setState({
+					data: this.state.data.concat([
+						{ id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }])
+					,
+					loadDataPage: true
+				}), 1000)
+			}
+		}
+	}
 
 	constructor(props) {
 		super(props);
@@ -42,39 +41,21 @@ export default class Home extends Component {
 
 	render() {
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={styles.fill}>
+				<HeaderApp title="Shop Any" navigation={ this.props.navigation }/>
 				<ScrollView
 					scrollEventThrottle={10}
-					onScroll={({ nativeEvent }) => {
-						if (parseInt(nativeEvent.contentOffset.y) >= parseInt(nativeEvent.contentSize.height - 700)) {
-							if (this.state.loadDataPage === true) {
-								this.setState({
-									loadDataPage: false,
-								})
-								console.log(nativeEvent.contentOffset.y, parseInt(nativeEvent.contentSize.height - 700))
-								console.log('Loadthem', this.state.data.length)
-								setTimeout(() => this.setState({
-									data: this.state.data.concat([
-										{ id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }])
-									,
-									loadDataPage: true
-								}), 1000)
-							}
-						}
-					}}
+					onScroll={({ nativeEvent }) => this._onScrollEnd(nativeEvent)}
 				>
 					<View style={[styles.viewSilde, { }]}>
 						<SildeHome />
 					</View>
 					<View>
 						<FlatList
-							onContentSizeChange={(contentWidth, contentHeight) => {
-								console.log(contentHeight)
-							}}
-							contentContainerStyle={{ padding: 10, paddingBottom: 0 }}
+							contentContainerStyle={styles.contentSizeFlasList}
 							scrollEventThrottle={10}
 							data={this.state.data}
-							renderItem={({ item }) => <Product item={item} />}
+							renderItem={({ item }) => <Product item={item} navigation={this.props.navigation}/>}
 							numColumns={2}
 							keyExtractor={(item, index) => `${index}`}
 						/>
@@ -86,6 +67,9 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+	fill: {
+		flex: 1,
+	},
 	viewHeader: {
 		width,
 		height: 50
@@ -93,5 +77,8 @@ const styles = StyleSheet.create({
 	viewSilde: {
 		width,
 		height: SLIDER_MAX_HEIGHT,
-	}
+	},
+	contentSizeFlasList: { 
+		padding: 10, 
+		paddingBottom: 0 }
 })
