@@ -18,7 +18,7 @@ export default class Home extends Component {
 					loadDataPage: false,
 				})
 				console.log(contentOffset.y, parseInt(contentSize.height - 700))
-				console.log('Loadthem', this.state.data.length)
+				console.log('Load', this.state.data.length)
 				setTimeout(() => this.setState({
 					data: this.state.data.concat([
 						{ id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }])
@@ -47,12 +47,12 @@ export default class Home extends Component {
 					scrollEventThrottle={10}
 					onScroll={({ nativeEvent }) => this._onScrollEnd(nativeEvent)}
 				>
-					<View style={[styles.viewSilde, { }]}>
+					<View style={[styles.viewSlide, { }]}>
 						<SildeHome />
 					</View>
 					<View>
 						<FlatList
-							contentContainerStyle={styles.contentSizeFlasList}
+							contentContainerStyle={styles.contentSizeFlatList}
 							scrollEventThrottle={10}
 							data={this.state.data}
 							renderItem={({ item }) => <Product item={item} navigation={this.props.navigation}/>}
@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
 		width,
 		height: 50
 	},
-	viewSilde: {
+	viewSlide: {
 		width,
 		height: SLIDER_MAX_HEIGHT,
 	},
-	contentSizeFlasList: { 
+	contentSizeFlatList: { 
 		padding: 10, 
 		paddingBottom: 0 }
 })
